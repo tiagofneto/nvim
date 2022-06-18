@@ -66,7 +66,7 @@ nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 
 " tree
-nnoremap <leader>c <cmd>NvimTreeFindFileToggle<CR>
+nnoremap <leader>t <cmd>NvimTreeFindFileToggle<CR>
 
 lua << EOF
 require('treesitter-config')
