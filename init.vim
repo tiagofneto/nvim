@@ -15,8 +15,10 @@ set nowrap " doesn't wrap long lines to multiple lines
 set incsearch " searches while writing
 set termguicolors " requried for some plugins
 set scrolloff=8 " start scrolling above the last line
+filetype plugin on " required for some plugins
 
 call plug#begin()
+" Core
 Plug 'morhetz/gruvbox' " gruvbox theme
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} " treesitter syntax highlighting
 Plug 'neovim/nvim-lspconfig' " lspconfig language servers
@@ -33,22 +35,38 @@ Plug 'nvim-telescope/telescope.nvim' " telescope fuzze finder
 Plug 'nvim-lualine/lualine.nvim' " lualine
 Plug 'kyazdani42/nvim-web-devicons' " file icons
 Plug 'kyazdani42/nvim-tree.lua' " tree explorer
+
+" Misc
+Plug 'tpope/vim-fugitive' " git
+Plug 'tpope/vim-surround' " brackets, parenthesis, etc...
+Plug 'mhinz/vim-signify' " git status line
+Plug 'jiangmiao/auto-pairs' " auto closing brackets, parenthesis, etc...
+Plug 'alvan/vim-closetag' " auto close tag
+Plug 'scrooloose/nerdcommenter' " comments
 call plug#end()
 
+let mapleader=" "
+
+" colorscheme
 colorscheme gruvbox
 set background=dark
 
-let mapleader=" "
-" Telescope
+" nvim-cmp
+set completeopt=menu,menuone,noselect
+
+" signify
+let g:signify_sign_add = '│'
+let g:signify_sign_delete = '│'
+let g:signify_sign_change = '│'
+
+" telescope
 nnoremap <leader><leader> <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 
-"Nvim Tree
+" tree
 nnoremap <leader>c <cmd>NvimTreeFindFileToggle<CR>
-
-
 
 lua << EOF
 require('treesitter-config')
