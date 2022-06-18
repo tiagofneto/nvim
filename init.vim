@@ -15,7 +15,7 @@ set nowrap " doesn't wrap long lines to multiple lines
 set incsearch " searches while writing
 set termguicolors " requried for some plugins
 set scrolloff=8 " start scrolling above the last line
-filetype plugin on " required for some plugins
+filetype plugin indent on " required for some plugins
 
 call plug#begin()
 " Core
@@ -38,11 +38,14 @@ Plug 'kyazdani42/nvim-tree.lua' " tree explorer
 
 " Misc
 Plug 'tpope/vim-fugitive' " git
-Plug 'tpope/vim-surround' " brackets, parenthesis, etc...
+Plug 'tpope/vim-surround' " brackets, parentheses, etc...
 Plug 'mhinz/vim-signify' " git status line
-Plug 'jiangmiao/auto-pairs' " auto closing brackets, parenthesis, etc...
+Plug 'jiangmiao/auto-pairs' " auto closing brackets, parentheses, etc...
 Plug 'alvan/vim-closetag' " auto close tag
 Plug 'scrooloose/nerdcommenter' " comments
+Plug 'norcalli/nvim-colorizer.lua' " colorizer
+Plug 'dkarter/bullets.vim' " auto bullets
+Plug 'wellle/context.vim' " current context of cursor
 call plug#end()
 
 let mapleader=" "
@@ -75,4 +78,5 @@ require('diagnostics')
 require('nvim-cmp-config')
 require('lualine-config')
 require('nvim-tree-config')
+require('nvim-colorizer-config')
 EOF
