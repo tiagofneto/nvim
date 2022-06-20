@@ -15,6 +15,8 @@ set nowrap " doesn't wrap long lines to multiple lines
 set incsearch " searches while writing
 set termguicolors " requried for some plugins
 set scrolloff=8 " start scrolling above the last line
+set splitbelow " more natural splits
+set splitright
 filetype plugin indent on " required for some plugins
 
 call plug#begin()
@@ -53,6 +55,12 @@ let mapleader=" "
 " colorscheme
 colorscheme gruvbox
 set background=dark
+
+" navigate between splits
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
 
 " nvim-cmp
 set completeopt=menu,menuone,noselect

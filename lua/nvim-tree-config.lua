@@ -1,6 +1,6 @@
 require("nvim-tree").setup({
   sort_by = "case_sensitive",
-  open_on_setup = true,
+  --open_on_setup = true,
   view = {
     mappings = {
       list = {
