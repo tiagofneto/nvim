@@ -3,6 +3,9 @@ local servers = {
     'eslint',
     'tsserver',
     'solidity_ls',
+   --'pylsp',
+    'jedi_language_server',
+    'rust_analyzer',
 }
 
 -- Mappings.

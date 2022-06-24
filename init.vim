@@ -17,6 +17,7 @@ set termguicolors " requried for some plugins
 set scrolloff=8 " start scrolling above the last line
 set splitbelow " more natural splits
 set splitright
+set mouse=a " mouse support
 filetype plugin indent on " required for some plugins
 
 call plug#begin()
