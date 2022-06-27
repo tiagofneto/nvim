@@ -49,6 +49,7 @@ Plug 'scrooloose/nerdcommenter' " comments
 Plug 'norcalli/nvim-colorizer.lua' " colorizer
 Plug 'dkarter/bullets.vim' " auto bullets
 Plug 'wellle/context.vim' " current context of cursor
+Plug 'christoomey/vim-tmux-navigator' " vim tmux navigation
 call plug#end()
 
 let mapleader=" "
@@ -60,10 +61,11 @@ set background=dark
 " navigate between splits
 nnoremap <silent> vv <C-w>v
 nnoremap <silent> vs <C-w>s
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
+" vim tmux navigator already maps these
+"nnoremap <C-J> <C-W><C-J>
+"nnoremap <C-K> <C-W><C-K>
+"nnoremap <C-L> <C-W><C-L>
+"nnoremap <C-H> <C-W><C-H>
 
 " nvim-cmp
 set completeopt=menu,menuone,noselect
