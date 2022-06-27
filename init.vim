@@ -58,6 +58,8 @@ colorscheme gruvbox
 set background=dark
 
 " navigate between splits
+nnoremap <silent> vv <C-w>v
+nnoremap <silent> vs <C-w>s
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
