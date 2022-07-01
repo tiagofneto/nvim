@@ -35,6 +35,7 @@ Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
 Plug 'nvim-lua/plenary.nvim' " dependency for various plugins
 Plug 'nvim-telescope/telescope.nvim' " telescope fuzze finder
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' } " telescope sorting performance
 Plug 'nvim-lualine/lualine.nvim' " lualine
 Plug 'kyazdani42/nvim-web-devicons' " file icons
 Plug 'kyazdani42/nvim-tree.lua' " tree explorer
@@ -92,4 +93,5 @@ require('nvim-cmp-config')
 require('lualine-config')
 require('nvim-tree-config')
 require('nvim-colorizer-config')
+require('telescope-config')
 EOF
