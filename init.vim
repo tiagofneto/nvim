@@ -39,6 +39,8 @@ Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' } " telescope so
 Plug 'nvim-lualine/lualine.nvim' " lualine
 Plug 'kyazdani42/nvim-web-devicons' " file icons
 Plug 'kyazdani42/nvim-tree.lua' " tree explorer
+Plug 'akinsho/bufferline.nvim', { 'tag': 'v2.*' }
+Plug 'tiagovla/scope.nvim' " bufferline for tabs instead of buffers
 
 " Misc
 Plug 'tpope/vim-fugitive' " git
@@ -94,4 +96,5 @@ require('lualine-config')
 require('nvim-tree-config')
 require('nvim-colorizer-config')
 require('telescope-config')
+require('bufferline-config')
 EOF

@@ -2,7 +2,7 @@ local servers = {
     --'solc',
     'eslint',
     'tsserver',
-    'solidity_ls',
+    --'solidity_ls',
    --'pylsp',
     'jedi_language_server',
     'rust_analyzer',
