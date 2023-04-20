@@ -39,6 +39,7 @@ Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' } " telescope so
 Plug 'nvim-lualine/lualine.nvim' " lualine
 Plug 'kyazdani42/nvim-web-devicons' " file icons
 Plug 'kyazdani42/nvim-tree.lua' " tree explorer
+Plug 'prettier/vim-prettier', { 'do': 'yarn install --frozen-lockfile --production' }
 
 " Misc
 Plug 'tpope/vim-fugitive' " git
@@ -51,6 +52,10 @@ Plug 'norcalli/nvim-colorizer.lua' " colorizer
 Plug 'dkarter/bullets.vim' " auto bullets
 Plug 'wellle/context.vim' " current context of cursor
 Plug 'christoomey/vim-tmux-navigator' " vim tmux navigation
+
+Plug '0xhyoga/starknet-vim'
+Plug 'iden3/vim-circom-syntax'
+Plug 'github/copilot.vim'
 call plug#end()
 
 let mapleader=" "
@@ -84,6 +89,10 @@ nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 
 " tree
 nnoremap <leader>t <cmd>NvimTreeFindFileToggle<CR>
+
+" copilot
+imap <silent><script><expr> § copilot#Accept("\<CR>")
+let g:copilot_no_tab_map = v:true
 
 lua << EOF
 require('treesitter-config')

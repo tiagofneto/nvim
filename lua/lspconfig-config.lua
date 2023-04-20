@@ -6,6 +6,7 @@ local servers = {
    --'pylsp',
     'jedi_language_server',
     'rust_analyzer',
+    'gopls'
 }
 
 -- Mappings.
