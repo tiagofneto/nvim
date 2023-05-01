@@ -1,13 +1,14 @@
 require'nvim-treesitter.configs'.setup {
   -- A list of parser names, or "all"
   ensure_installed = {
-    'solidity',
+    'vim',
     'lua',
+    'solidity',
     'javascript',
     'typescript',
     'python',
     'rust',
-    'go',
+    'go'
   },
 
   -- Install parsers synchronously (only applied to `ensure_installed`)
@@ -24,3 +25,4 @@ require'nvim-treesitter.configs'.setup {
     additional_vim_regex_highlighting = false,
   },
 }
+
