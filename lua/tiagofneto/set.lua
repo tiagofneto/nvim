@@ -34,3 +34,6 @@ vim.opt.incsearch = true
 vim.opt.wrap = false
 
 vim.opt.hlsearch = false
+
+vim.g.copilot_no_tab_map = true
+vim.g.copilot_assume_mapped = true

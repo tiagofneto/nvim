@@ -40,18 +40,18 @@ cmp.setup({
 		documentation = cmp.config.window.bordered(),
 	},
 	formatting = {
-		-- changing the order of fields so the icon is the first
-		fields = {'menu', 'abbr', 'kind'},
+        -- changing the order of fields so the icon is the first
+        fields = {'menu', 'abbr', 'kind'},
 
-		-- here is where the change happens
-		format = function(entry, item)
-			local menu_icon = {
-				nvim_lsp = 'λ',
-				luasnip = '⋗',
-				buffer = 'Ω',
-				path = '🖫',
-				nvim_lua = 'Π',
-			}
+        -- here is where the change happens
+        format = function(entry, item)
+            local menu_icon = {
+                nvim_lsp = 'λ',
+                luasnip = '⋗',
+                buffer = 'Ω',
+                path = '🖫',
+                nvim_lua = 'Π',
+            }
 
 			local kind_icons = {
 				Text = "",
@@ -87,4 +87,10 @@ cmp.setup({
 		end,
 	},
 })
+
+local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+cmp.event:on(
+    'confirm_done',
+    cmp_autopairs.on_confirm_done()
+)
 

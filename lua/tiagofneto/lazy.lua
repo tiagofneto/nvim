@@ -54,7 +54,16 @@ local plugins = {
 	}
 },
 	'christoomey/vim-tmux-navigator',
-	'nvim-lualine/lualine.nvim'
+	'nvim-lualine/lualine.nvim',
+    'tpope/vim-fugitive',
+    'tpope/vim-surround',
+    'airblade/vim-gitgutter',
+    'windwp/nvim-autopairs',
+    'preservim/nerdcommenter',
+    'norcalli/nvim-colorizer.lua',
+    'dkarter/bullets.vim',
+    'wellle/context.vim',
+    'github/copilot.vim'
 }
 
 local opts = {}
