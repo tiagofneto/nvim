@@ -63,7 +63,8 @@ local plugins = {
     'norcalli/nvim-colorizer.lua',
     'dkarter/bullets.vim',
     'wellle/context.vim',
-    'github/copilot.vim'
+    'github/copilot.vim',
+    '0xhyoga/starknet-vim'
 }
 
 local opts = {}
