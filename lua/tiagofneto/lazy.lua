@@ -64,7 +64,11 @@ local plugins = {
     'dkarter/bullets.vim',
     'wellle/context.vim',
     'github/copilot.vim',
-    '0xhyoga/starknet-vim'
+    '0xhyoga/starknet-vim',
+    {
+        'nvim-telescope/telescope-fzf-native.nvim',
+        build = "make"
+    }
 }
 
 local opts = {}
