@@ -68,7 +68,8 @@ local plugins = {
     {
         'nvim-telescope/telescope-fzf-native.nvim',
         build = "make"
-    }
+    },
+    'simrat39/rust-tools.nvim'
 }
 
 local opts = {}
