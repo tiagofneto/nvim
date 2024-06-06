@@ -5,8 +5,8 @@ My highly customized Neovim config, written in **Lua**. Aims to provide a seamle
 Please note that this is a **work in progress**, and is continually updated as the Vim/Neovim ecosystem evolves and new plugins are released.
 
 <p align="center">
-<img width="700" alt="main" src="https://github.com/tiagofneto/nvim/assets/46165861/5ff32dd2-5dc1-462f-8591-b625c4dc2891">
-<img width="700" alt="telescope" src="https://github.com/tiagofneto/nvim/assets/46165861/83cedb2a-338d-4ebc-85d0-52395b4eacc4">
+ <img width="700" alt="main" src="https://github.com/tiagofneto/nvim/assets/46165861/0de45285-712a-41ef-a2f8-037aec161554">
+ <img width="700" alt="telescope" src="https://github.com/tiagofneto/nvim/assets/46165861/d2f3494e-8b2a-429f-932c-a8aed3c78e68">
 </p>
  
 ## Key Plugins
