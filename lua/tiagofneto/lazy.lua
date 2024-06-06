@@ -69,7 +69,16 @@ local plugins = {
         'nvim-telescope/telescope-fzf-native.nvim',
         build = "make"
     },
-    'simrat39/rust-tools.nvim'
+    'simrat39/rust-tools.nvim',
+    {
+      "iamcco/markdown-preview.nvim",
+      cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+      build = "cd app && yarn install",
+      init = function()
+        vim.g.mkdp_filetypes = { "markdown" }
+      end,
+      ft = { "markdown" },
+    }
 }
 
 local opts = {}
