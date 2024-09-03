@@ -19,7 +19,9 @@ return {
             'windwp/nvim-autopairs',
             event = "InsertEnter",
             config = true
-        }
+        },
+        "williamboman/mason.nvim",
+        "williamboman/mason-lspconfig.nvim",
     },
     config = function()
         local cmp = require('cmp')
@@ -29,6 +31,23 @@ return {
         local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 
         require("luasnip.loaders.from_vscode").lazy_load()
+
+        require("mason").setup()
+        require("mason-lspconfig").setup({
+            ensure_installed = {
+                "lua_ls",
+                "rust_analyzer"
+            },
+            handlers = {
+                function (server_name) -- default handler (optional)
+                    require("lspconfig")[server_name].setup {}
+                end,
+                -- option to provide dedicated handler for specific servers
+                -- ["rust_analyzer"] = function ()
+                --     require("rust-tools").setup {}
+                -- end
+            }
+        })
 
         cmp.setup({
             snippet = {
