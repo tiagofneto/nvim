@@ -1,4 +1,4 @@
-vim.g.mapleader = " "
+vim.g.mapleader = ' '
 
 -- navigate between splits
 vim.keymap.set('n', 'vv', '<C-w>v')

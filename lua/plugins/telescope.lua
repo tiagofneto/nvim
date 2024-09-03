@@ -1,9 +1,10 @@
 return {
-    'nvim-telescope/telescope.nvim', tag = '0.1.8',
-    dependencies = { 
+    'nvim-telescope/telescope.nvim',
+    tag = '0.1.8',
+    dependencies = {
         'nvim-lua/plenary.nvim',
         { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
-        "nvim-tree/nvim-web-devicons",
+        'nvim-tree/nvim-web-devicons',
     },
     config = function()
         local builtin = require('telescope.builtin')
@@ -13,5 +14,5 @@ return {
         vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
 
         require('telescope').load_extension('fzf')
-    end
+    end,
 }

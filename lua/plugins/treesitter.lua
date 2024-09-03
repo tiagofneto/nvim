@@ -1,8 +1,8 @@
 return {
-    "nvim-treesitter/nvim-treesitter",
-    build = ":TSUpdate",
+    'nvim-treesitter/nvim-treesitter',
+    build = ':TSUpdate',
     config = function()
-        require("nvim-treesitter.configs").setup({
+        require('nvim-treesitter.configs').setup({
             ensure_installed = {
                 'vim',
                 'lua',
@@ -11,14 +11,14 @@ return {
                 'typescript',
                 'python',
                 'rust',
-                'go'
+                'go',
             },
 
             -- Install parsers synchronously (only applied to `ensure_installed`)
             sync_install = false,
 
             indent = {
-                enable = true
+                enable = true,
             },
 
             highlight = {
@@ -30,7 +30,7 @@ return {
                 -- Using this option may slow down your editor, and you may see some duplicate highlights.
                 -- Instead of true it can also be a list of languages
                 additional_vim_regex_highlighting = false,
-            }
+            },
         })
-    end
+    end,
 }
