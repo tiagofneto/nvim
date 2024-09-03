@@ -31,6 +31,13 @@ return {
             },
             sections = {
                 lualine_a = {{ 'mode', separator = { left = '' }, right_padding = 2, fmt = function(mode) return mode_map[mode] end }},
+                lualine_b = {'branch', 'diff', { 'diagnostics', symbols = {
+                    error = '✘',
+                    warn = '',
+                    info = '',
+                    hint = '•'
+                } }},
+                lualine_z = {{ 'location', separator = { right = '' }, left_padding = 2 }}
             }
         })
     end
