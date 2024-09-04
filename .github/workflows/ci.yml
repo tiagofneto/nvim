@@ -1,9 +1,9 @@
-name: Stylua
+name: Format and lint
 
 on: [push, pull_request]
 
 jobs:
-  stylua:
+  format:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -12,3 +12,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           version: latest 
           args: --check .
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: lunarmodules/luacheck@v1
