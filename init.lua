@@ -4,6 +4,8 @@ Replace all vim.cmd
 Figure out icons for mini pick
 Add dictionaries
 Add thesaurus
+Show signature on picker menu
+Keep / interact with signature while typing
 ]]
 vim.o.number = true
 vim.o.relativenumber = true
@@ -43,6 +45,8 @@ vim.keymap.set('n', '<leader><leader>x', '<cmd>source %<CR>')
 vim.keymap.set('n', '<leader>x', ':.lua<CR>')
 vim.keymap.set('v', '<leader>x', ':lua<CR>')
 
+vim.keymap.set('n', '<leader>t', '<cmd>Explore<CR>')
+
 vim.pack.add({
     "https://github.com/navarasu/onedark.nvim",
     "https://github.com/echasnovski/mini.pick",
@@ -56,7 +60,7 @@ require "mason".setup()
 vim.keymap.set('n', '<leader><leader>', ":Pick files<CR>")
 vim.keymap.set('n', '<leader>h', ":Pick help<CR>")
 
-vim.lsp.enable({ "lua_ls" })
+vim.lsp.enable({ "lua_ls", "ts_ls" })
 vim.lsp.config("lua_ls", {
     settings = {
         Lua = {
@@ -102,5 +106,3 @@ vim.api.nvim_create_autocmd('LspAttach', {
         end
     end,
 })
-
-vim.lsp.omnifunc(1, 0)
