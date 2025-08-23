@@ -41,18 +41,20 @@ vim.o.mouse = "a"
 
 vim.g.mapleader = ' '
 
-vim.keymap.set('n', '<leader><leader>x', '<cmd>source %<CR>')
-vim.keymap.set('n', '<leader>x', ':.lua<CR>')
+vim.keymap.set('n', '<leader>x', '<cmd>source %<CR>')
 vim.keymap.set('v', '<leader>x', ':lua<CR>')
 
 vim.keymap.set('n', '<leader>t', '<cmd>Explore<CR>')
 
+vim.lsp.enable({ "lua_ls", "ts_ls" })
+
 vim.pack.add({
     "https://github.com/navarasu/onedark.nvim",
     "https://github.com/echasnovski/mini.pick",
-    "https://github.com/neovim/nvim-lspconfig",
     "https://github.com/mason-org/mason.nvim"
 })
+
+vim.cmd("colorscheme onedark")
 
 require "mini.pick".setup()
 require "mason".setup()
@@ -60,40 +62,21 @@ require "mason".setup()
 vim.keymap.set('n', '<leader><leader>', ":Pick files<CR>")
 vim.keymap.set('n', '<leader>h', ":Pick help<CR>")
 
-vim.lsp.enable({ "lua_ls", "ts_ls" })
-vim.lsp.config("lua_ls", {
-    settings = {
-        Lua = {
-            workspace = {
-                library = vim.api.nvim_get_runtime_file("", true)
-            }
-        }
-    }
-})
-
-vim.cmd("colorscheme onedark")
-
 vim.api.nvim_create_autocmd('LspAttach', {
     group = vim.api.nvim_create_augroup('custom.lsp', {}),
     callback = function(args)
         local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
-        -- if client:supports_method('textDocument/implementation') then
-        -- Create a keymap for vim.lsp.buf.implementation ...
-        -- end
-
-        -- Enable auto-completion. Note: Use CTRL-Y to select an item. |complete_CTRL-Y|
         if client:supports_method('textDocument/completion') then
             -- Optional: trigger autocompletion on EVERY keypress. May be slow!
             -- local chars = {}; for i = 32, 126 do table.insert(chars, string.char(i)) end
             -- client.server_capabilities.completionProvider.triggerCharacters = chars
+            vim.print(client.server_capabilities.completionProvider.triggerCharacters)
 
             vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
 
             vim.opt.completeopt = { 'menu', 'menuone', 'noinsert', 'fuzzy', 'popup' }
         end
 
-        -- Auto-format ("lint") on save.
-        -- Usually not needed if server supports "textDocument/willSaveWaitUntil".
         if not client:supports_method('textDocument/willSaveWaitUntil')
             and client:supports_method('textDocument/formatting') then
             vim.api.nvim_create_autocmd('BufWritePre', {
