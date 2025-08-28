@@ -1,12 +1,3 @@
---[[ TODOS
-Replace all :command
-Replace all vim.cmd
-Figure out icons for mini pick
-Add dictionaries
-Add thesaurus
-Show signature on picker menu
-Keep / interact with signature while typing
-]]
 vim.o.number = true
 vim.o.relativenumber = true
 
@@ -42,11 +33,11 @@ vim.o.mouse = "a"
 vim.g.mapleader = ' '
 
 vim.keymap.set('n', '<leader>x', '<cmd>source %<CR>')
-vim.keymap.set('v', '<leader>x', ':lua<CR>')
+vim.keymap.set('v', '<leader>x', '<cmd>lua<CR>')
 
 vim.keymap.set('n', '<leader>t', '<cmd>Explore<CR>')
 
-vim.lsp.enable({ "lua_ls", "ts_ls" })
+vim.lsp.enable({ "lua_ls", "ts_ls", "copilot" })
 
 vim.pack.add({
     "https://github.com/navarasu/onedark.nvim",
@@ -54,13 +45,13 @@ vim.pack.add({
     "https://github.com/mason-org/mason.nvim"
 })
 
-vim.cmd("colorscheme onedark")
+vim.cmd.colorscheme("onedark")
 
 require "mini.pick".setup()
 require "mason".setup()
 
-vim.keymap.set('n', '<leader><leader>', ":Pick files<CR>")
-vim.keymap.set('n', '<leader>h', ":Pick help<CR>")
+vim.keymap.set('n', '<leader><leader>', '<cmd>Pick files<CR>')
+vim.keymap.set('n', '<leader>h', '<cmd>Pick help<CR>')
 
 vim.api.nvim_create_autocmd('LspAttach', {
     group = vim.api.nvim_create_augroup('custom.lsp', {}),
@@ -68,13 +59,14 @@ vim.api.nvim_create_autocmd('LspAttach', {
         local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
         if client:supports_method('textDocument/completion') then
             -- Optional: trigger autocompletion on EVERY keypress. May be slow!
-            -- local chars = {}; for i = 32, 126 do table.insert(chars, string.char(i)) end
-            -- client.server_capabilities.completionProvider.triggerCharacters = chars
-            vim.print(client.server_capabilities.completionProvider.triggerCharacters)
+            local chars = {}; for i = 32, 126 do table.insert(chars, string.char(i)) end
+            client.server_capabilities.completionProvider.triggerCharacters = chars
 
             vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
 
             vim.opt.completeopt = { 'menu', 'menuone', 'noinsert', 'fuzzy', 'popup' }
+
+            -- Show function signatures in command line while navigating completion menu
         end
 
         if not client:supports_method('textDocument/willSaveWaitUntil')
@@ -87,5 +79,42 @@ vim.api.nvim_create_autocmd('LspAttach', {
                 end,
             })
         end
+
+        if client:supports_method('textDocument/inlineCompletion') then
+            vim.lsp.inline_completion.enable(true)
+            local inline_completion_key = '<Tab>'
+            vim.keymap.set('i', inline_completion_key, function()
+                if not vim.lsp.inline_completion.get() then
+                    return inline_completion_key
+                end
+            end, {
+                expr = true,
+                replace_keycodes = true,
+                desc = 'Get the current inline completion',
+            })
+        end
     end,
 })
+
+--[[
+vim.api.nvim_create_autocmd('CompleteChanged', {
+    group = vim.api.nvim_create_augroup('custom.complete', {}),
+    callback = function()
+        -- Keep hello world for debugging
+        --[[
+        vim.api.nvim_echo({
+            { 'hello world\n',            'Normal' },
+            { 'CompleteChanged fired!\n', 'Comment' }
+        }, true, {})
+        ]\]
+
+        local item = vim.v.completed_item
+        if item and item.word and item.kind == 'Function' then
+            -- Trigger LSP signature help for the selected function
+            vim.defer_fn(function()
+                vim.lsp.buf.signature_help()
+            end, 10)
+        end
+    end
+})
+]]
