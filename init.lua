@@ -37,21 +37,36 @@ vim.keymap.set('v', '<leader>x', '<cmd>lua<CR>')
 
 vim.keymap.set('n', '<leader>t', '<cmd>Explore<CR>')
 
+-- Auto pair completions
+vim.keymap.set('i', '(', '()<Left>')
+vim.keymap.set('i', '[', '[]<Left>')
+vim.keymap.set('i', '{', '{}<Left>')
+vim.keymap.set('i', '"', '""<Left>')
+vim.keymap.set('i', "'", "''<Left>")
+
 vim.lsp.enable({ "lua_ls", "ts_ls", "copilot" })
 
 vim.pack.add({
     "https://github.com/navarasu/onedark.nvim",
     "https://github.com/echasnovski/mini.pick",
+    "https://github.com/echasnovski/mini.icons",
     "https://github.com/mason-org/mason.nvim"
 })
 
 vim.cmd.colorscheme("onedark")
 
 require "mini.pick".setup()
+require "mini.icons".setup()
 require "mason".setup()
 
 vim.keymap.set('n', '<leader><leader>', '<cmd>Pick files<CR>')
 vim.keymap.set('n', '<leader>h', '<cmd>Pick help<CR>')
+
+vim.diagnostic.config({
+    virtual_lines = {
+        current_line = true
+    }
+})
 
 vim.api.nvim_create_autocmd('LspAttach', {
     group = vim.api.nvim_create_augroup('custom.lsp', {}),
@@ -95,26 +110,3 @@ vim.api.nvim_create_autocmd('LspAttach', {
         end
     end,
 })
-
---[[
-vim.api.nvim_create_autocmd('CompleteChanged', {
-    group = vim.api.nvim_create_augroup('custom.complete', {}),
-    callback = function()
-        -- Keep hello world for debugging
-        --[[
-        vim.api.nvim_echo({
-            { 'hello world\n',            'Normal' },
-            { 'CompleteChanged fired!\n', 'Comment' }
-        }, true, {})
-        ]\]
-
-        local item = vim.v.completed_item
-        if item and item.word and item.kind == 'Function' then
-            -- Trigger LSP signature help for the selected function
-            vim.defer_fn(function()
-                vim.lsp.buf.signature_help()
-            end, 10)
-        end
-    end
-})
-]]
