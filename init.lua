@@ -48,8 +48,8 @@ vim.lsp.enable({ "lua_ls", "ts_ls", "copilot" })
 
 vim.pack.add({
     "https://github.com/navarasu/onedark.nvim",
-    "https://github.com/echasnovski/mini.pick",
-    "https://github.com/echasnovski/mini.icons",
+    "https://github.com/nvim-mini/mini.pick",
+    "https://github.com/nvim-mini/mini.icons",
     "https://github.com/mason-org/mason.nvim",
     "https://github.com/lewis6991/gitsigns.nvim"
 })
