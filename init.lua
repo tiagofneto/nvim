@@ -35,8 +35,6 @@ vim.g.mapleader = ' '
 vim.keymap.set('n', '<leader>x', '<cmd>source %<CR>')
 vim.keymap.set('v', '<leader>x', '<cmd>lua<CR>')
 
-vim.keymap.set('n', '<leader>t', '<cmd>Explore<CR>')
-
 -- Auto pair completions
 vim.keymap.set('i', '(', '()<Left>')
 vim.keymap.set('i', '[', '[]<Left>')
@@ -51,7 +49,8 @@ vim.pack.add({
     "https://github.com/nvim-mini/mini.pick",
     "https://github.com/nvim-mini/mini.icons",
     "https://github.com/mason-org/mason.nvim",
-    "https://github.com/lewis6991/gitsigns.nvim"
+    "https://github.com/lewis6991/gitsigns.nvim",
+    "https://github.com/stevearc/oil.nvim"
 })
 
 vim.cmd.colorscheme("onedark")
@@ -59,10 +58,13 @@ vim.cmd.colorscheme("onedark")
 require "mini.pick".setup()
 require "mini.icons".setup()
 require "mason".setup()
+require "oil".setup()
 
 vim.keymap.set('n', '<leader><leader>', '<cmd>Pick files<CR>')
 vim.keymap.set('n', '<leader>fg', '<cmd>Pick grep_live<CR>')
 vim.keymap.set('n', '<leader>h', '<cmd>Pick help<CR>')
+
+vim.keymap.set('n', '<leader>t', '<cmd>Oil --float<CR>')
 
 vim.diagnostic.config({
     virtual_lines = {
@@ -76,7 +78,12 @@ vim.api.nvim_create_autocmd('LspAttach', {
         local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
         if client:supports_method('textDocument/completion') then
             -- Optional: trigger autocompletion on EVERY keypress. May be slow!
-            local chars = {}; for i = 32, 126 do table.insert(chars, string.char(i)) end
+            -- local chars = {}; for i = 32, 126 do table.insert(chars, string.char(i)) end
+            -- Only A-Z a-z and .
+            local chars = {};
+            for i = 65, 90 do table.insert(chars, string.char(i)) end
+            for i = 97, 122 do table.insert(chars, string.char(i)) end
+            table.insert(chars, string.char(46))
             client.server_capabilities.completionProvider.triggerCharacters = chars
 
             vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
