@@ -42,7 +42,7 @@ vim.keymap.set('i', '{', '{}<Left>')
 vim.keymap.set('i', '"', '""<Left>')
 vim.keymap.set('i', "'", "''<Left>")
 
-vim.lsp.enable({ "lua_ls", "ts_ls", "pyright", "rust_analyzer" })
+vim.lsp.enable({ "lua_ls", "ts_ls", "rust_analyzer", "copilot", "ty", "ruff", "terraformls", "gh_actions_ls" })
 
 vim.pack.add({
     "https://github.com/navarasu/onedark.nvim",
