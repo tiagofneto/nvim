@@ -36,37 +36,57 @@ LSP is **fully native, no plugins** (no nvim-lspconfig, no mason-lspconfig glue)
 
 - Each server gets a file at `lsp/<name>.lua` returning a `vim.lsp.Config` table.
 - Base config is copied from https://github.com/neovim/nvim-lspconfig (the `lsp/` configs there), then trimmed/tweaked for the user's needs. Keep the `---@brief` doc header when copied.
-- Servers are turned on in `init.lua` with `vim.lsp.enable({ ... })`.
-- Capabilities (completion, formatting, inline completion, etc.) are wired in the single `LspAttach` autocmd in `init.lua` — not per-server, not via plugins. Examples already present:
+- Servers are turned on in `lua/config/lsp.lua` with `vim.lsp.enable({ ... })`.
+- Capabilities (completion, formatting, inline completion, etc.) are wired in the single `LspAttach` autocmd in `lua/config/lsp.lua` — not per-server, not via plugins. Examples already present:
   - **Completion**: `vim.lsp.completion.enable(...)` with `autotrigger`, native `completeopt`.
   - **Formatting**: `BufWritePre` + `vim.lsp.buf.format(...)`.
   - **Inline completion** (Copilot): `vim.lsp.inline_completion.enable(...)` bound to `<Tab>`.
 
 `mason.nvim` is used only to install server binaries, not to configure them.
 
-To add a server: create `lsp/<name>.lua`, add its name to the `vim.lsp.enable({...})` list. Ask before installing the binary/package.
+To add a server: create `lsp/<name>.lua`, add its name to the `vim.lsp.enable({...})` list in `lua/config/lsp.lua`. Ask before installing the binary/package.
 
 ## Layout
 
 ```
-init.lua                 -- options, keymaps, pack.add, plugin setup, diagnostics, LspAttach
+init.lua                 -- entry point: requires each lua/config module, in order
+lua/config/
+  options.lua            -- vim.o / vim.opt + mapleader
+  plugins.lua            -- vim.pack.add, plugin setup() calls, colorscheme
+  keymaps.lua            -- general (non-LSP, non-review) keymaps
+  lsp.lua                -- vim.lsp.enable, diagnostics, LspAttach autocmd
+  review.lua             -- :Review / :ReviewReset + git review keymaps
 lsp/<name>.lua           -- one vim.lsp.Config per server
 after/ftplugin/<ft>.lua  -- filetype-local settings/keymaps
 nvim-pack-lock.json      -- vim.pack lockfile (do not edit)
 ```
 
+- `init.lua` is just `require("config.<mod>")` calls. Load order matters: `options` first (sets `mapleader` before any `<leader>` map), `plugins` before `review` (review depends on `gitsigns`).
+- Config split lives under `lua/config/` — `require("config.x")` resolves `lua/config/x.lua` natively, no plugin manager.
+- One file per concern. Put new global behavior in the matching module (a new keymap → `keymaps.lua`, LSP capability → `lsp.lua`); add a new module + `require` in `init.lua` only for a genuinely new concern.
 - Filetype-specific behavior goes in `after/ftplugin/<ft>.lua` (buffer-local: `vim.opt_local`, `{ buffer = true }` keymaps).
-- Global options, keymaps, and plugin setup stay in `init.lua`.
+
+### Where new code goes
+
+Default: extend an existing module, don't add files. Decide by concern:
+
+- **New option / setting** → `lua/config/options.lua`.
+- **New global keymap** (not LSP, not review) → `lua/config/keymaps.lua`.
+- **New plugin** → add the URL to `vim.pack.add` and its `setup()` in `lua/config/plugins.lua` (ask first — see Package management). Plugin-specific keymaps: keep with the plugin's `setup()` in `plugins.lua` if tightly coupled, else `keymaps.lua`.
+- **New LSP server** → `lsp/<name>.lua` + name in `vim.lsp.enable` (`lua/config/lsp.lua`). New LSP capability/autocmd → the `LspAttach` block in `lua/config/lsp.lua`.
+- **New filetype behavior** → `after/ftplugin/<ft>.lua`.
+
+Create a **new `lua/config/<feature>.lua` module only for a genuinely new, self-contained feature** (like `review.lua`) — its own commands/keymaps/autocmds that don't fit the buckets above. When you do: keep it one concern, then `require("config.<feature>")` in `init.lua` at the right point in load order, and document it in this Layout section. Don't pre-split or nest deeper than `lua/config/` without asking.
 
 ## Git review
 
-Reviewing changes (e.g. agent-written code) happens **in-editor, natively** — no GitHub round-trip. Built on the built-in quickfix + diff mode, with `gitsigns.nvim` (already in `vim.pack`) for per-file diffs and gutter signs. Lives in `init.lua`.
+Reviewing changes (e.g. agent-written code) happens **in-editor, natively** — no GitHub round-trip. Built on the built-in quickfix + diff mode, with `gitsigns.nvim` (already in `vim.pack`) for per-file diffs and gutter signs. Lives in `lua/config/review.lua`.
 
 - `:Review [base]` (`<leader>vr`) — populate quickfix with files changed vs the **merge-base** of `base` (default `main`) and HEAD, so unrelated commits on `base` don't leak in. Sets the gitsigns base globally via `change_base`. This repo's default branch is `master`, so review it with `:Review master`.
 - `<leader>vd` — `gitsigns.diffthis` of the current file vs the review base (split diff). Works without `:Review` too — then it diffs vs the git index (uncommitted changes) instead of the merge-base.
 - `:ReviewReset` (`<leader>vR`) — clear the review base; signs and `<leader>vd` snap back to the git index.
 - `]h` / `[h` — `gitsigns.nav_hunk` next/prev. Native `]c` / `[c` also work inside a diff.
-- `require "gitsigns".setup()` is called in the plugin setup block — keep it; the review flow depends on it.
+- `require "gitsigns".setup()` is called in `lua/config/plugins.lua` — keep it; the review flow depends on it.
 
 Keep this native. Do **not** swap in diffview.nvim / fugitive / octo.nvim without asking.
 
