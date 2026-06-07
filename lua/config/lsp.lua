@@ -41,7 +41,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
         if client:supports_method('textDocument/inlineCompletion') then
             vim.lsp.inline_completion.enable(true)
             local inline_completion_key = '<Tab>'
-            vim.keymap.set('i', inline_completion_key, function()
+            require("config.cheatsheet").map('i', inline_completion_key, function()
                 if not vim.lsp.inline_completion.get() then
                     return inline_completion_key
                 end

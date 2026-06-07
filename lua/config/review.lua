@@ -1,4 +1,6 @@
 -- Review branch changes natively: changed files in the quickfix, per-file diff via gitsigns.
+local map = require("config.cheatsheet").map
+
 local function review(base)
     base = (base and base ~= '') and base or 'main'
     local root = vim.trim(vim.fn.system({ 'git', 'rev-parse', '--show-toplevel' }))
@@ -15,6 +17,10 @@ local function review(base)
         if path then
             items[#items + 1] = { filename = root .. '/' .. path, text = status }
         end
+    end
+    -- git diff ignores untracked files; list new files explicitly.
+    for _, path in ipairs(vim.fn.systemlist({ 'git', '-C', root, 'ls-files', '--others', '--exclude-standard' })) do
+        items[#items + 1] = { filename = root .. '/' .. path, text = 'A' }
     end
     if #items == 0 then
         return vim.notify('No changes vs ' .. base, vim.log.levels.INFO)
@@ -33,9 +39,9 @@ end
 
 vim.api.nvim_create_user_command('Review', function(o) review(o.args) end, { nargs = '?' })
 vim.api.nvim_create_user_command('ReviewReset', review_reset, {})
-vim.keymap.set('n', '<leader>vr', '<cmd>Review<CR>', { desc = 'Review branch changes' })
-vim.keymap.set('n', '<leader>vR', '<cmd>ReviewReset<CR>', { desc = 'Reset review base to index' })
-vim.keymap.set('n', '<leader>vd', function() require('gitsigns').diffthis(vim.g.review_base) end,
+map('n', '<leader>vr', '<cmd>Review<CR>', { desc = 'Review branch changes' })
+map('n', '<leader>vR', '<cmd>ReviewReset<CR>', { desc = 'Reset review base to index' })
+map('n', '<leader>vd', function() require('gitsigns').diffthis(vim.g.review_base) end,
     { desc = 'Diff current file vs review base' })
-vim.keymap.set('n', ']h', function() require('gitsigns').nav_hunk('next') end, { desc = 'Next hunk' })
-vim.keymap.set('n', '[h', function() require('gitsigns').nav_hunk('prev') end, { desc = 'Prev hunk' })
+map('n', ']h', function() require('gitsigns').nav_hunk('next') end, { desc = 'Next hunk' })
+map('n', '[h', function() require('gitsigns').nav_hunk('prev') end, { desc = 'Prev hunk' })

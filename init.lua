@@ -1,5 +1,6 @@
 require("config.options")
 require("config.plugins")
+require("config.cheatsheet")
 require("config.keymaps")
 require("config.lsp")
 require("config.review")

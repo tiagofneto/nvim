@@ -53,6 +53,7 @@ init.lua                 -- entry point: requires each lua/config module, in ord
 lua/config/
   options.lua            -- vim.o / vim.opt + mapleader
   plugins.lua            -- vim.pack.add, plugin setup() calls, colorscheme
+  cheatsheet.lua         -- map() wrapper + :Cheatsheet float (keybind registry)
   keymaps.lua            -- general (non-LSP, non-review) keymaps
   lsp.lua                -- vim.lsp.enable, diagnostics, LspAttach autocmd
   review.lua             -- :Review / :ReviewReset + git review keymaps
@@ -61,7 +62,7 @@ after/ftplugin/<ft>.lua  -- filetype-local settings/keymaps
 nvim-pack-lock.json      -- vim.pack lockfile (do not edit)
 ```
 
-- `init.lua` is just `require("config.<mod>")` calls. Load order matters: `options` first (sets `mapleader` before any `<leader>` map), `plugins` before `review` (review depends on `gitsigns`).
+- `init.lua` is just `require("config.<mod>")` calls. Load order matters: `options` first (sets `mapleader` before any `<leader>` map), `cheatsheet` before any module that calls its `map()` wrapper (`keymaps`, `lsp`, `review`), `plugins` before `review` (review depends on `gitsigns`).
 - Config split lives under `lua/config/` — `require("config.x")` resolves `lua/config/x.lua` natively, no plugin manager.
 - One file per concern. Put new global behavior in the matching module (a new keymap → `keymaps.lua`, LSP capability → `lsp.lua`); add a new module + `require` in `init.lua` only for a genuinely new concern.
 - Filetype-specific behavior goes in `after/ftplugin/<ft>.lua` (buffer-local: `vim.opt_local`, `{ buffer = true }` keymaps).
@@ -71,7 +72,7 @@ nvim-pack-lock.json      -- vim.pack lockfile (do not edit)
 Default: extend an existing module, don't add files. Decide by concern:
 
 - **New option / setting** → `lua/config/options.lua`.
-- **New global keymap** (not LSP, not review) → `lua/config/keymaps.lua`.
+- **New global keymap** (not LSP, not review) → `lua/config/keymaps.lua`. Use the `map()` wrapper from `cheatsheet.lua` (not raw `vim.keymap.set`) with a `desc` so it shows in the cheatsheet — see Cheatsheet.
 - **New plugin** → add the URL to `vim.pack.add` and its `setup()` in `lua/config/plugins.lua` (ask first — see Package management). Plugin-specific keymaps: keep with the plugin's `setup()` in `plugins.lua` if tightly coupled, else `keymaps.lua`.
 - **New LSP server** → `lsp/<name>.lua` + name in `vim.lsp.enable` (`lua/config/lsp.lua`). New LSP capability/autocmd → the `LspAttach` block in `lua/config/lsp.lua`.
 - **New filetype behavior** → `after/ftplugin/<ft>.lua`.
@@ -82,7 +83,7 @@ Create a **new `lua/config/<feature>.lua` module only for a genuinely new, self-
 
 Reviewing changes (e.g. agent-written code) happens **in-editor, natively** — no GitHub round-trip. Built on the built-in quickfix + diff mode, with `gitsigns.nvim` (already in `vim.pack`) for per-file diffs and gutter signs. Lives in `lua/config/review.lua`.
 
-- `:Review [base]` (`<leader>vr`) — populate quickfix with files changed vs the **merge-base** of `base` (default `main`) and HEAD, so unrelated commits on `base` don't leak in. Sets the gitsigns base globally via `change_base`. This repo's default branch is `master`, so review it with `:Review master`.
+- `:Review [base]` (`<leader>vr`) — populate quickfix with files changed vs the **merge-base** of `base` (default `main`) and HEAD, so unrelated commits on `base` don't leak in. Untracked files are listed too (git diff omits them) as `A`. Sets the gitsigns base globally via `change_base`. This repo's default branch is `master`, so review it with `:Review master`.
 - `<leader>vd` — `gitsigns.diffthis` of the current file vs the review base (split diff). Works without `:Review` too — then it diffs vs the git index (uncommitted changes) instead of the merge-base.
 - `:ReviewReset` (`<leader>vR`) — clear the review base; signs and `<leader>vd` snap back to the git index.
 - `]h` / `[h` — `gitsigns.nav_hunk` next/prev. Native `]c` / `[c` also work inside a diff.
@@ -90,11 +91,22 @@ Reviewing changes (e.g. agent-written code) happens **in-editor, natively** — 
 
 Keep this native. Do **not** swap in diffview.nvim / fugitive / octo.nvim without asking.
 
+## Cheatsheet
+
+A self-documenting keybind cheatsheet. Lives in `lua/config/cheatsheet.lua`. **One source of truth**: the keymap registers itself.
+
+- `cheatsheet.map(mode, lhs, rhs, opts)` is a thin wrapper over `vim.keymap.set`. It sets the map, then — if `opts.desc` is non-empty — records `{ mode, lhs, desc }` in an in-memory registry. Maps with no `desc` are set but not listed (e.g. the auto-pair insert maps), so the sheet stays curated. No built-in/default maps leak in (we only record our own calls).
+- `:Cheatsheet` / `<leader>/` toggle a centered floating window listing registered maps, grouped by mode and aligned; `q` / `<Esc>` close.
+- Buffer-local maps (`opts.buffer`) are tagged with their bufnr and only listed when that buffer is current — so `after/ftplugin/*` maps show only in their filetype.
+- The registry dedups on `mode+lhs+buf`, so per-buffer `ftplugin` re-runs don't pile up.
+
+**Convention: register keymaps via `cheatsheet.map` with a `desc`**, not raw `vim.keymap.set`, so they appear automatically. `local map = require("config.cheatsheet").map` at the top of the module (see `keymaps.lua`, `review.lua`, `after/ftplugin/markdown.lua`; in `lsp.lua` it's required inline inside `LspAttach`). Skip the wrapper only for intentionally-hidden maps (give them no `desc`). Don't build a second list of keybinds anywhere — the registry is it.
+
 ## Conventions
 
 - Leader is `<Space>`.
 - Indentation: 4 spaces, expandtab (match existing files).
-- Use `vim.keymap.set` with `<cmd>...<CR>` style for command maps.
+- Register keymaps via the `map()` wrapper from `cheatsheet.lua` (with a `desc`) so they list in the cheatsheet; use `<cmd>...<CR>` style for command maps. Raw `vim.keymap.set` only for maps deliberately kept off the sheet (no `desc`).
 - Keep additions consistent with surrounding code — same idiom, naming, comment density.
 
 ## Workflow for agents
