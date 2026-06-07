@@ -94,8 +94,16 @@ local function review(base)
     vim.cmd('copen | cfirst')
 end
 
+local function review_reset()
+    vim.g.review_base = nil
+    require('gitsigns').change_base(nil, true)
+    vim.notify('Review base reset to index', vim.log.levels.INFO)
+end
+
 vim.api.nvim_create_user_command('Review', function(o) review(o.args) end, { nargs = '?' })
+vim.api.nvim_create_user_command('ReviewReset', review_reset, {})
 vim.keymap.set('n', '<leader>vr', '<cmd>Review<CR>', { desc = 'Review branch changes' })
+vim.keymap.set('n', '<leader>vR', '<cmd>ReviewReset<CR>', { desc = 'Reset review base to index' })
 vim.keymap.set('n', '<leader>vd', function() require('gitsigns').diffthis(vim.g.review_base) end,
     { desc = 'Diff current file vs review base' })
 vim.keymap.set('n', ']h', function() require('gitsigns').nav_hunk('next') end, { desc = 'Next hunk' })

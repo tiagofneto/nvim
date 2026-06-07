@@ -63,7 +63,8 @@ nvim-pack-lock.json      -- vim.pack lockfile (do not edit)
 Reviewing changes (e.g. agent-written code) happens **in-editor, natively** — no GitHub round-trip. Built on the built-in quickfix + diff mode, with `gitsigns.nvim` (already in `vim.pack`) for per-file diffs and gutter signs. Lives in `init.lua`.
 
 - `:Review [base]` (`<leader>vr`) — populate quickfix with files changed vs the **merge-base** of `base` (default `master`) and HEAD, so unrelated commits on `base` don't leak in. Sets the gitsigns base globally via `change_base`.
-- `<leader>vd` — `gitsigns.diffthis` of the current file vs the review base (split diff).
+- `<leader>vd` — `gitsigns.diffthis` of the current file vs the review base (split diff). Works without `:Review` too — then it diffs vs the git index (uncommitted changes) instead of the merge-base.
+- `:ReviewReset` (`<leader>vR`) — clear the review base; signs and `<leader>vd` snap back to the git index.
 - `]h` / `[h` — `gitsigns.nav_hunk` next/prev. Native `]c` / `[c` also work inside a diff.
 - `require "gitsigns".setup()` is called in the plugin setup block — keep it; the review flow depends on it.
 
