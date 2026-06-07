@@ -69,7 +69,7 @@ vim.keymap.set('n', '<leader>t', '<cmd>Oil --float<CR>')
 
 -- Review branch changes natively: changed files in the quickfix, per-file diff via gitsigns.
 local function review(base)
-    base = (base and base ~= '') and base or 'master'
+    base = (base and base ~= '') and base or 'main'
     local root = vim.trim(vim.fn.system({ 'git', 'rev-parse', '--show-toplevel' }))
     if vim.v.shell_error ~= 0 then
         return vim.notify('Not in a git repo', vim.log.levels.ERROR)
